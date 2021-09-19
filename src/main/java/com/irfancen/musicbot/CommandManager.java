@@ -2,14 +2,12 @@ package com.irfancen.musicbot;
 
 import com.irfancen.musicbot.command.CommandContext;
 import com.irfancen.musicbot.command.ICommand;
+import com.irfancen.musicbot.command.commands.HelpCommand;
 import com.irfancen.musicbot.command.commands.PingCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class CommandManager {
@@ -17,14 +15,19 @@ public class CommandManager {
 
     public CommandManager() {
         addCommand(new PingCommand());
+        addCommand(new HelpCommand(this));
     }
 
     private void addCommand(ICommand cmd) {
         commands.put(cmd.getName().toLowerCase(), cmd);
     }
 
+    public Set<String> getCommands() {
+        return commands.keySet();
+    }
+
     @Nullable
-    private ICommand getCommand(String search) {
+    public ICommand getCommand(String search) {
         ICommand result = commands.get(search.toLowerCase());
 
         if (result == null) {

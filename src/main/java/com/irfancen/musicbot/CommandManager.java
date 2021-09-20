@@ -5,6 +5,7 @@ import com.irfancen.musicbot.command.ICommand;
 import com.irfancen.musicbot.command.commands.HelpCommand;
 import com.irfancen.musicbot.command.commands.PingCommand;
 import com.irfancen.musicbot.command.commands.admin.SetPrefixCommand;
+import com.irfancen.musicbot.command.commands.music.JoinCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import javax.annotation.Nullable;
@@ -15,9 +16,13 @@ public class CommandManager {
     private final Map<String, ICommand> commands = new HashMap<>();
 
     public CommandManager() {
+        // Basic Commands
         addCommand(new PingCommand());
         addCommand(new HelpCommand(this));
         addCommand(new SetPrefixCommand());
+
+        // Music Commands
+        addCommand(new JoinCommand());
     }
 
     private void addCommand(ICommand cmd) {

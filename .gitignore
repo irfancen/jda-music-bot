@@ -164,3 +164,6 @@ gradle-app.setting
 .env
 .env.*
 env/
+
+# Database File
+database.db

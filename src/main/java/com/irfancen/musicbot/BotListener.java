@@ -1,5 +1,6 @@
 package com.irfancen.musicbot;
 
+import com.irfancen.musicbot.database.SQLiteDataSource;
 import me.duncte123.botcommons.BotCommons;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -10,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class BotListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BotListener.class);
@@ -28,7 +32,8 @@ public class BotListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = Config.get("prefix");
+        final long guildId = event.getGuild().getIdLong();
+        String prefix = BotMapping.PREFIXES.computeIfAbsent(guildId, this::getPrefix);
         String raw = event.getMessage().getContentRaw();
 
         if (raw.equalsIgnoreCase(prefix + "shutdown")
@@ -41,7 +46,35 @@ public class BotListener extends ListenerAdapter {
         }
 
         if (raw.startsWith(prefix)) {
-            manager.handle(event);
+            manager.handle(event, prefix);
         }
+    }
+
+    private String getPrefix(long guildId) {
+        try (final PreparedStatement preparedStatement = SQLiteDataSource
+                .getConnection()
+                // language=SQLite
+                .prepareStatement("SELECT  prefix FROM guild_settings WHERE guild_id = ?")) {
+
+            preparedStatement.setString(1, String.valueOf(guildId));
+
+            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString("prefix");
+                }
+            }
+
+            try (final PreparedStatement insertStatement = SQLiteDataSource
+                    .getConnection()
+                    // language=SQLite
+                    .prepareStatement("INSERT INTO guild_settings(guild_id) VALUES(?)")) {
+                insertStatement.setString(1, String.valueOf(guildId));
+                insertStatement.execute();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Config.get("prefix");
     }
 }

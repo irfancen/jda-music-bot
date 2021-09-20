@@ -22,8 +22,10 @@ public class PingCommand implements ICommand {
     }
 
     @Override
-    public String getHelp() {
-        return "**Shows the current ping**\n" +
-                "Usage:\t`-ping`";
+    public String getHelp(String prefix) {
+        return String.format(
+                "**Shows the current ping**\n" +
+                        "Usage: `%1$sping`", prefix
+        );
     }
 }

@@ -4,6 +4,7 @@ import com.irfancen.musicbot.command.CommandContext;
 import com.irfancen.musicbot.command.ICommand;
 import com.irfancen.musicbot.command.commands.HelpCommand;
 import com.irfancen.musicbot.command.commands.PingCommand;
+import com.irfancen.musicbot.command.commands.admin.SetPrefixCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import javax.annotation.Nullable;
@@ -16,6 +17,7 @@ public class CommandManager {
     public CommandManager() {
         addCommand(new PingCommand());
         addCommand(new HelpCommand(this));
+        addCommand(new SetPrefixCommand());
     }
 
     private void addCommand(ICommand cmd) {
@@ -40,9 +42,9 @@ public class CommandManager {
         return result;
     }
 
-    void handle(GuildMessageReceivedEvent event) {
+    void handle(GuildMessageReceivedEvent event, String prefix) {
         String[] split = event.getMessage().getContentRaw()
-                .replaceFirst("(?i)" + Pattern.quote(Config.get("prefix")), "")
+                .replaceFirst("(?i)" + Pattern.quote(prefix), "")
                 .split("\\s+");
 
         String invoke = split[0].toLowerCase();

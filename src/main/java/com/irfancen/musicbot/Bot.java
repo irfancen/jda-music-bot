@@ -26,6 +26,7 @@ public class Bot {
                         CacheFlag.ACTIVITY,
                         CacheFlag.EMOTE
                 )
+                .enableCache(CacheFlag.VOICE_STATE)
                 .addEventListeners(new BotListener())
                 .setActivity(Activity.playing("with her Developer."))
                 .build().awaitReady();

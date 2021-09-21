@@ -64,12 +64,12 @@ public class PlayerManager {
 
             @Override
             public void noMatches() {
-                channel.sendMessageFormat("No songs found for %s", trackUrl).queue();
+                channel.sendMessageFormat("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                channel.sendMessageFormat("Error while loading the track %s", trackUrl).queue();
+                channel.sendMessageFormat("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")).queue();
             }
         });
     }

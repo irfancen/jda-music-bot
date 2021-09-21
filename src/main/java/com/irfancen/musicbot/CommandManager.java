@@ -7,6 +7,7 @@ import com.irfancen.musicbot.command.commands.PingCommand;
 import com.irfancen.musicbot.command.commands.admin.SetPrefixCommand;
 import com.irfancen.musicbot.command.commands.music.JoinCommand;
 import com.irfancen.musicbot.command.commands.music.PlayCommand;
+import com.irfancen.musicbot.command.commands.music.StopCommand;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import javax.annotation.Nullable;
@@ -25,6 +26,7 @@ public class CommandManager {
         // Music Commands
         addCommand(new JoinCommand());
         addCommand(new PlayCommand());
+        addCommand(new StopCommand());
     }
 
     private void addCommand(ICommand cmd) {

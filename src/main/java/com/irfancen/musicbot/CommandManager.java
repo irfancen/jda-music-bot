@@ -23,6 +23,7 @@ public class CommandManager {
 
         // Music Commands
         addCommand(new JoinCommand());
+        addCommand(new LeaveCommand());
         addCommand(new PlayCommand());
         addCommand(new NowPlayingCommand());
         addCommand(new QueueCommand());

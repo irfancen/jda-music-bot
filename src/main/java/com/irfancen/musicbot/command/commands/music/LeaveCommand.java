@@ -40,11 +40,6 @@ public class LeaveCommand implements ICommand {
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
         final AudioPlayer audioPlayer = musicManager.audioPlayer;
 
-        if (audioPlayer.getPlayingTrack() == null) {
-            channel.sendMessage("There is no songs currently playing.").queue();
-            return;
-        }
-
         musicManager.scheduler.repeating = false;
         musicManager.scheduler.queue.clear();
         musicManager.audioPlayer.stopTrack();

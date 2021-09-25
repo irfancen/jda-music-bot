@@ -3,6 +3,7 @@ package com.irfancen.musicbot.command.commands.music;
 import com.irfancen.musicbot.command.CommandContext;
 import com.irfancen.musicbot.command.ICommand;
 import com.irfancen.musicbot.lavaplayer.PlayerManager;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -11,8 +12,8 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
 
+import java.awt.*;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -23,7 +24,11 @@ public class PlayCommand implements ICommand {
         final TextChannel channel = ctx.getChannel();
 
         if (ctx.getArgs().isEmpty()) {
-            channel.sendMessage("Missing arguments.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("Missing arguments")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
@@ -38,7 +43,11 @@ public class PlayCommand implements ICommand {
             final VoiceChannel memberChannel = memberVoiceState.getChannel();
 
             if (!PermissionUtil.checkPermission(memberChannel, self, Permission.VOICE_CONNECT)) {
-                channel.sendMessage("I don't have permission to join the voice channel.").queue();
+                channel.sendMessage(new EmbedBuilder()
+                        .setDescription("I don't have permission to join the voice channel")
+                        .setColor(Color.RED)
+                        .build())
+                        .queue();
                 return;
             }
 
@@ -46,13 +55,21 @@ public class PlayCommand implements ICommand {
             channel.sendMessageFormat("Connected to `\uD83D\uDD0A`  **%s**.", memberChannel.getName()).queue();
         } else {
             if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-                channel.sendMessage("You need to be in the same voice channel as me for this to work.").queue();
+                channel.sendMessage(new EmbedBuilder()
+                        .setDescription("You need to be in the same voice channel as me for this to work")
+                        .setColor(Color.RED)
+                        .build())
+                        .queue();
                 return;
             }
         }
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage("You need to be in the voice channel for this to work.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("You need to be in the voice channel for this to work")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
@@ -62,7 +79,7 @@ public class PlayCommand implements ICommand {
             args = "ytsearch: " + args;
         }
 
-        PlayerManager.getInstance().loadAndPlay(channel, args);
+        PlayerManager.getInstance().loadAndPlay(channel, ctx, args);
     }
 
     @Override

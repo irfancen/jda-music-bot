@@ -1,5 +1,6 @@
 package com.irfancen.musicbot.lavaplayer;
 
+import com.irfancen.musicbot.command.CommandContext;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -7,9 +8,11 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +40,18 @@ public class PlayerManager {
         });
     }
 
-    public void loadAndPlay(TextChannel channel, String trackUrl) {
+    public void loadAndPlay(TextChannel channel, CommandContext ctx, String trackUrl) {
         final GuildMusicManager musicManager = this.getMusicManager(channel.getGuild());
 
         this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
                 musicManager.scheduler.queue(track);
-                channel.sendMessageFormat("Added **%s** to the queue", track.getInfo().title).queue();
+                channel.sendMessage(new EmbedBuilder()
+                        .setDescription(String.format("Queued [%s](%s)", track.getInfo().title, track.getInfo().uri))
+                        .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                        .build())
+                        .queue();
             }
 
             @Override
@@ -53,23 +60,39 @@ public class PlayerManager {
 
                 if (playlist.isSearchResult() || tracks.size() == 1) {
                     musicManager.scheduler.queue(tracks.get(0));
-                    channel.sendMessageFormat("Added **%s** to the queue.", tracks.get(0).getInfo().title).queue();
+                    channel.sendMessage(new EmbedBuilder()
+                            .setDescription(String.format("Queued [%s](%s)", tracks.get(0).getInfo().title, tracks.get(0).getInfo().uri))
+                            .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                            .build())
+                            .queue();
                 } else {
                     for (final AudioTrack track : tracks) {
                         musicManager.scheduler.queue(track);
                     }
-                    channel.sendMessageFormat("Added **%s** songs to the queue.", tracks.size()).queue();
+                    channel.sendMessage(new EmbedBuilder()
+                            .setDescription(String.format("Queued **%d** songs", tracks.size()))
+                            .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                            .build())
+                            .queue();
                 }
             }
 
             @Override
             public void noMatches() {
-                channel.sendMessageFormat("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")).queue();
+                channel.sendMessage(new EmbedBuilder()
+                        .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                        .setColor(Color.RED)
+                        .build())
+                        .queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                channel.sendMessageFormat("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")).queue();
+                channel.sendMessage(new EmbedBuilder()
+                        .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                        .setColor(Color.RED)
+                        .build())
+                        .queue();
             }
         });
     }

@@ -2,6 +2,7 @@ package com.irfancen.musicbot.command.commands.music;
 
 import com.irfancen.musicbot.command.CommandContext;
 import com.irfancen.musicbot.command.ICommand;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
@@ -9,6 +10,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
+
+import java.awt.*;
 
 public class JoinCommand implements ICommand {
     @Override
@@ -18,7 +21,11 @@ public class JoinCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage("Already connected to a voice channel.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("Already connected to a voice channel")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
@@ -26,7 +33,11 @@ public class JoinCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage("You need to be in a voice channel for this command to work.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("You need to be in a voice channel for this command to work")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
@@ -34,7 +45,11 @@ public class JoinCommand implements ICommand {
         final VoiceChannel memberChannel = memberVoiceState.getChannel();
 
         if (!PermissionUtil.checkPermission(memberChannel, self, Permission.VOICE_CONNECT)) {
-            channel.sendMessage("I don't have permission to join the voice channel.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("I don't have permission to join the voice channel")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 

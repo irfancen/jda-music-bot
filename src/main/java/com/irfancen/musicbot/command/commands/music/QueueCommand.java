@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 
+import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,12 @@ public class QueueCommand implements ICommand {
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
         final BlockingQueue<AudioTrack> queue = musicManager.scheduler.queue;
 
-        if (queue.isEmpty()) {
-            channel.sendMessage("The queue is currently empty.").queue();
+        if (musicManager.audioPlayer.getPlayingTrack() == null && queue.isEmpty()) {
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("The queue is currently empty")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
@@ -38,7 +43,7 @@ public class QueueCommand implements ICommand {
                         new MessageEmbed
                                 .Field("Currently playing",
                                 String.format("[%s](%s)", currentTrack == null ?
-                                                "No songs currently playing." :
+                                                "No songs currently playing" :
                                                 currentTrack.getInfo().title,
                                         currentTrack == null ? null : currentTrack.getInfo().uri),
                                 false))
@@ -49,8 +54,9 @@ public class QueueCommand implements ICommand {
             AudioTrack track = trackList.get(i);
             lst.add(String.format("`%2d.`\t[%s](%s)", i+1, track.getInfo().title, track.getInfo().uri));
         }
-
-        embedBuilder.addField(new MessageEmbed.Field("Next up", String.join("\n", lst),false));
+        if (trackCount > 0) {
+            embedBuilder.addField(new MessageEmbed.Field("Next up", String.join("\n", lst),false));
+        }
 
         if (trackList.size() > trackCount) {
             embedBuilder.addField("", String.format("and **%d** more...", trackList.size() - trackCount), false);
@@ -67,7 +73,7 @@ public class QueueCommand implements ICommand {
     @Override
     public String getHelp(String prefix) {
         return String.format("**Shows the queued songs**\n" +
-                "Usage: `%1$squeue <link>`\n" +
+                "Usage: `%1$squeue`\n" +
                 "Aliases: `%1$sq`", prefix);
     }
 

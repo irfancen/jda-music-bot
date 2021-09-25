@@ -4,12 +4,14 @@ import com.irfancen.musicbot.command.CommandContext;
 import com.irfancen.musicbot.command.ICommand;
 import com.irfancen.musicbot.lavaplayer.GuildMusicManager;
 import com.irfancen.musicbot.lavaplayer.PlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
+
+import java.awt.*;
 
 public class LeaveCommand implements ICommand {
     @Override
@@ -19,7 +21,11 @@ public class LeaveCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (!selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage("I need to be in a voice channel for this to work").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("I need to be in a voice channel for this to work")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
@@ -27,18 +33,25 @@ public class LeaveCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage("You need to be in the voice channel for this to work.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("You need to be in the voice channel for this to work")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
         if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage("You need to be in the same voice channel as me for this to work.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("You need to be in the same voice channel as me for this to work")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
         final Guild guild = ctx.getGuild();
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
-        final AudioPlayer audioPlayer = musicManager.audioPlayer;
 
         musicManager.scheduler.repeating = false;
         musicManager.scheduler.queue.clear();
@@ -46,7 +59,10 @@ public class LeaveCommand implements ICommand {
 
         final AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
-        channel.sendMessage("I have left the voice channel").queue();
+        channel.sendMessage(new EmbedBuilder()
+                .setDescription("I have left the voice channel")
+                .build())
+                .queue();
     }
 
     @Override

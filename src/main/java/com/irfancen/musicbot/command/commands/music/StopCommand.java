@@ -4,9 +4,12 @@ import com.irfancen.musicbot.command.CommandContext;
 import com.irfancen.musicbot.command.ICommand;
 import com.irfancen.musicbot.lavaplayer.GuildMusicManager;
 import com.irfancen.musicbot.lavaplayer.PlayerManager;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+
+import java.awt.*;
 
 public class StopCommand implements ICommand {
     @Override
@@ -16,7 +19,11 @@ public class StopCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (!selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage("I need to be in a voice channel for this to work").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("I need to be in a voice channel for this to work")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
@@ -24,12 +31,20 @@ public class StopCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage("You need to be in the voice channel for this to work.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("You need to be in the voice channel for this to work")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
         if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage("You need to be in the same voice channel as me for this to work.").queue();
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription("You need to be in the same voice channel as me for this to work")
+                    .setColor(Color.RED)
+                    .build())
+                    .queue();
             return;
         }
 
@@ -38,7 +53,10 @@ public class StopCommand implements ICommand {
         musicManager.scheduler.player.stopTrack();
         musicManager.scheduler.queue.clear();
 
-        channel.sendMessage("The player has been stopped and the queue has been cleared.").queue();
+        channel.sendMessage(new EmbedBuilder()
+                .setDescription("The player has been stopped and the queue has been cleared")
+                .build())
+                .queue();
     }
 
     @Override

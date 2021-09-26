@@ -1,6 +1,7 @@
 package com.irfancen.musicbot;
 
 import com.irfancen.musicbot.database.SQLiteDataSource;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import me.duncte123.botcommons.BotCommons;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -17,7 +18,11 @@ import java.sql.SQLException;
 
 public class BotListener extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(BotListener.class);
-    private final CommandManager manager = new CommandManager();
+    private final CommandManager manager;
+
+    public BotListener(EventWaiter waiter) {
+        manager = new CommandManager(waiter);
+    }
 
     @Override
     public void onReady(@Nonnull ReadyEvent event) {

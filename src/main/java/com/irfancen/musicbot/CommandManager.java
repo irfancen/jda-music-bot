@@ -6,6 +6,7 @@ import com.irfancen.musicbot.command.commands.HelpCommand;
 import com.irfancen.musicbot.command.commands.PingCommand;
 import com.irfancen.musicbot.command.commands.admin.SetPrefixCommand;
 import com.irfancen.musicbot.command.commands.music.*;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import javax.annotation.Nullable;
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
 public class CommandManager {
     private final Map<String, ICommand> commands = new HashMap<>();
 
-    public CommandManager() {
+    public CommandManager(EventWaiter waiter) {
         // Basic Commands
         addCommand(new PingCommand());
         addCommand(new HelpCommand(this));
@@ -24,7 +25,7 @@ public class CommandManager {
         // Music Commands
         addCommand(new JoinCommand());
         addCommand(new LeaveCommand());
-        addCommand(new PlayCommand());
+        addCommand(new PlayCommand(waiter));
         addCommand(new NowPlayingCommand());
         addCommand(new QueueCommand());
         addCommand(new RemoveCommand());

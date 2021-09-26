@@ -3,6 +3,7 @@ package com.irfancen.musicbot.command.commands.music;
 import com.irfancen.musicbot.command.CommandContext;
 import com.irfancen.musicbot.command.ICommand;
 import com.irfancen.musicbot.lavaplayer.PlayerManager;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -19,6 +20,12 @@ import java.net.URL;
 import java.util.List;
 
 public class PlayCommand implements ICommand {
+    private final EventWaiter waiter;
+
+    public PlayCommand(EventWaiter waiter) {
+        this.waiter = waiter;
+    }
+
     @Override
     public void handle(CommandContext ctx) {
         final TextChannel channel = ctx.getChannel();
@@ -79,7 +86,7 @@ public class PlayCommand implements ICommand {
             args = "ytsearch: " + args;
         }
 
-        PlayerManager.getInstance().loadAndPlay(channel, ctx, args);
+        PlayerManager.getInstance().loadAndPlay(channel, ctx, waiter, args);
     }
 
     @Override

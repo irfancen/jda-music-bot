@@ -29,6 +29,7 @@ public class CommandManager {
         addCommand(new QueueCommand());
         addCommand(new RemoveCommand());
         addCommand(new RepeatCommand());
+        addCommand(new ShuffleCommand());
         addCommand(new StopCommand());
         addCommand(new SkipCommand());
     }

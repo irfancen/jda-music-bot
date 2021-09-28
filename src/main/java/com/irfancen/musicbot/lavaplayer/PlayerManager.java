@@ -81,7 +81,7 @@ public class PlayerManager {
                     List<String> pick = new ArrayList<>();
                     for (int i = 0; i < 5; i++) {
                         AudioTrack pickTrack = tracks.get(i);
-                        pick.add(String.format("**%2d.**\t[%s](%s)", i+1, pickTrack.getInfo().title, pickTrack.getInfo().uri));
+                        pick.add(String.format("**%2d.**\t[%s](%s)\t[%s]", i+1, pickTrack.getInfo().title, pickTrack.getInfo().uri, timeFormatter(pickTrack.getDuration())));
                     }
                     channel.sendMessage(new EmbedBuilder()
                             .setTitle("Choose a Track")
@@ -161,5 +161,18 @@ public class PlayerManager {
             instance = new PlayerManager();
         }
         return instance;
+    }
+
+    private String timeFormatter(long time) {
+        long hour = TimeUnit.MILLISECONDS.toHours(time);
+        long minute = TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(hour);
+        long second = TimeUnit.MILLISECONDS.toSeconds(time) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time));
+
+        if (hour > 0) {
+            return String.format("%02d:%02d:%02d", hour, minute, second);
+        } else {
+            return String.format("%02d:%02d", minute, second);
+        }
     }
 }

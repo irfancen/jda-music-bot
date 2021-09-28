@@ -52,7 +52,7 @@ public class QueueCommand implements ICommand {
         List<String> lst = new ArrayList<>();
         for (int i = 0; i < trackCount; i++) {
             AudioTrack track = trackList.get(i);
-            lst.add(String.format("`%2d.`\t[%s](%s)", i+1, track.getInfo().title, track.getInfo().uri));
+            lst.add(String.format("`%2d.` [%s](%s)", i+1, track.getInfo().title.length() > 75 ? track.getInfo().title.substring(0, 75).stripTrailing() + "..." : track.getInfo().title, track.getInfo().uri));
         }
         if (trackCount > 0) {
             embedBuilder.addField(new MessageEmbed.Field("Next up", String.join("\n", lst),false));

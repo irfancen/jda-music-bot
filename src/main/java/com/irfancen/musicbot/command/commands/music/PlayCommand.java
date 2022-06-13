@@ -12,8 +12,12 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.awt.*;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -82,11 +86,44 @@ public class PlayCommand implements ICommand {
 
         String args = String.join(" ", ctx.getArgs());
 
-        if (!isUrl(args)) {
-            args = "ytsearch: " + args;
-        }
+        if (args.startsWith("https://open.spotify.com/")) {
+            String[] listArgs = null;
+            if (args.contains("track")) {
+                try {
+                    Document doc = Jsoup.connect(args).userAgent("Mozilla").data("name", "jsoup").get();
+                    args = doc.title().replace(" | Spotify", "");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-        PlayerManager.getInstance().loadAndPlay(channel, ctx, waiter, args);
+                listArgs = new String[]{"ytsearch: " + args};
+            } else if (args.contains("playlist")) {
+                try {
+                    Document doc = Jsoup.connect(args).userAgent("Mozilla").data("name", "jsoup").get();
+                    Elements tracks = doc.select("a[href].EntityRowV2__Link-sc-ayafop-8");
+
+                    listArgs = new String[tracks.size()];
+
+                    for (int i = 0; i < tracks.size(); i++) {
+                        listArgs[i] = "ytsearch: " + Jsoup.connect(tracks.get(i).attr("href"))
+                                .userAgent("Mozilla")
+                                .data("name", "jsoup")
+                                .get()
+                                .title()
+                                .replace(" | Spotify", "");
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            PlayerManager.getInstance().loadAndPlay(channel, ctx, waiter, listArgs);
+        } else {
+            if (!isUrl(args)) {
+                args = "ytsearch: " + args;
+            }
+            PlayerManager.getInstance().loadAndPlay(channel, ctx, waiter, args);
+        }
     }
 
     @Override

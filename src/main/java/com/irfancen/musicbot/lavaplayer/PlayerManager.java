@@ -156,6 +156,87 @@ public class PlayerManager {
         });
     }
 
+    public void loadAndPlay(TextChannel channel, CommandContext ctx, EventWaiter waiter, String[] tracks) {
+        final GuildMusicManager musicManager = this.getMusicManager(channel.getGuild());
+
+        if (tracks.length == 1) {
+            String trackUrl = tracks[0];
+            this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+                @Override
+                public void trackLoaded(AudioTrack track) {
+
+                }
+
+                @Override
+                public void playlistLoaded(AudioPlaylist playlist) {
+                    AudioTrack track = playlist.getTracks().get(0);
+                    musicManager.scheduler.queue(track);
+                    channel.sendMessage(new EmbedBuilder()
+                            .setDescription(String.format("Queued [%s](%s)", track.getInfo().title, track.getInfo().uri))
+                            .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                            .build())
+                            .queue();
+                }
+
+                @Override
+                public void noMatches() {
+                    channel.sendMessage(new EmbedBuilder()
+                            .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                            .setColor(Color.RED)
+                            .build())
+                            .queue();
+                }
+
+                @Override
+                public void loadFailed(FriendlyException exception) {
+                    channel.sendMessage(new EmbedBuilder()
+                            .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                            .setColor(Color.RED)
+                            .build())
+                            .queue();
+                }
+            });
+        } else {
+            for (String trackUrl: tracks) {
+                this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+                    @Override
+                    public void trackLoaded(AudioTrack track) {
+
+                    }
+
+                    @Override
+                    public void playlistLoaded(AudioPlaylist playlist) {
+                        AudioTrack track = playlist.getTracks().get(0);
+                        musicManager.scheduler.queue(track);
+                    }
+
+                    @Override
+                    public void noMatches() {
+                        channel.sendMessage(new EmbedBuilder()
+                                .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                                .setColor(Color.RED)
+                                .build())
+                                .queue();
+                    }
+
+                    @Override
+                    public void loadFailed(FriendlyException exception) {
+                        channel.sendMessage(new EmbedBuilder()
+                                .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                                .setColor(Color.RED)
+                                .build())
+                                .queue();
+                    }
+                });
+            }
+            channel.sendMessage(new EmbedBuilder()
+                    .setDescription(String.format("Queued **%d** songs", tracks.length))
+                    .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                    .build())
+                    .queue();
+        }
+    }
+
     public static PlayerManager getInstance() {
         if (instance == null) {
             instance = new PlayerManager();

@@ -99,11 +99,10 @@ public class PlayCommand implements ICommand {
                 }
 
                 listArgs = new String[]{"ytsearch: " + args};
-            } else if (args.contains("playlist")) {
+            } else if (args.contains("playlist") || args.contains("album")) {
                 try {
                     Document doc = Jsoup.connect(args).userAgent("Mozilla").data("name", "jsoup").get();
                     Elements tracks = doc.select("div[type=track]");
-
 
                     listArgs = new String[tracks.size()];
 

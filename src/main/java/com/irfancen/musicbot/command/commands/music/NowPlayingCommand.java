@@ -24,7 +24,7 @@ public class NowPlayingCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (!selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("I need to be in a voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -36,7 +36,7 @@ public class NowPlayingCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -45,7 +45,7 @@ public class NowPlayingCommand implements ICommand {
         }
 
         if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the same voice channel as me for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -58,7 +58,7 @@ public class NowPlayingCommand implements ICommand {
         final AudioTrack track = audioPlayer.getPlayingTrack();
 
         if (track == null) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("There is no songs currently playing")
                     .setColor(Color.RED)
                     .build())
@@ -74,7 +74,7 @@ public class NowPlayingCommand implements ICommand {
         int timePlayed = (int) (((float) currentPos / (float) duration) * 20);
         int timeRemain = 19 - timePlayed;
 
-        channel.sendMessage(new EmbedBuilder()
+        channel.sendMessageEmbeds(new EmbedBuilder()
                 .setTitle("Now Playing")
                 .setDescription(String.format("[%s](%s)", info.title, info.uri))
                 .setColor(ctx.getMember().getColor())

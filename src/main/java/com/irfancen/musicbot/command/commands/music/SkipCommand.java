@@ -23,7 +23,7 @@ public class SkipCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (!selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("I need to be in a voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -35,7 +35,7 @@ public class SkipCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -44,7 +44,7 @@ public class SkipCommand implements ICommand {
         }
 
         if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the same voice channel as me for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -56,7 +56,7 @@ public class SkipCommand implements ICommand {
         final AudioPlayer audioPlayer = musicManager.audioPlayer;
 
         if (audioPlayer.getPlayingTrack() == null) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("There is no songs currently playing")
                     .setColor(Color.RED)
                     .build())
@@ -70,7 +70,7 @@ public class SkipCommand implements ICommand {
         try {
             if (ctx.getArgs().isEmpty()) {
                 musicManager.scheduler.nextTrack();
-                channel.sendMessage(new EmbedBuilder()
+                channel.sendMessageEmbeds(new EmbedBuilder()
                         .setDescription("Skipped to the next song")
                         .build())
                         .queue();
@@ -83,19 +83,19 @@ public class SkipCommand implements ICommand {
             }
             musicManager.scheduler.nextTrack();
 
-            channel.sendMessage(
+            channel.sendMessageEmbeds(
                     removeEmbed.setDescription(
                             String.format("Skipped to [%s](%s)", song.getInfo().title, song.getInfo().uri))
                             .build())
                     .queue();
         } catch (NumberFormatException e) {
-            channel.sendMessage(
+            channel.sendMessageEmbeds(
                     removeEmbed.setDescription("Argument needs to be the index of the queue")
                             .setColor(Color.RED)
                             .build())
                     .queue();
         } catch (IndexOutOfBoundsException e) {
-            channel.sendMessage(
+            channel.sendMessageEmbeds(
                     removeEmbed.setDescription(
                             String.format("There are no songs at index **%d** of the queue", Integer.parseInt(ctx.getArgs().get(0))))
                             .setColor(Color.RED)

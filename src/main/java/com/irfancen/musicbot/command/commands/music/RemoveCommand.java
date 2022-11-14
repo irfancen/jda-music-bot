@@ -24,7 +24,7 @@ public class RemoveCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (!selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("I need to be in a voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -36,7 +36,7 @@ public class RemoveCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -45,7 +45,7 @@ public class RemoveCommand implements ICommand {
         }
 
         if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the same voice channel as me for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -54,7 +54,7 @@ public class RemoveCommand implements ICommand {
         }
 
         if (ctx.getArgs().isEmpty()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("Missing arguments")
                     .setColor(Color.RED)
                     .build())
@@ -63,7 +63,7 @@ public class RemoveCommand implements ICommand {
         }
 
         if (musicManager.audioPlayer.getPlayingTrack() == null && queue.isEmpty()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("The queue is currently empty")
                     .setColor(Color.RED)
                     .build())
@@ -77,19 +77,19 @@ public class RemoveCommand implements ICommand {
             int index = Integer.parseInt(ctx.getArgs().get(0));
             AudioTrack song = List.copyOf(queue).get(index - 1);
             queue.remove(song);
-            channel.sendMessage(
+            channel.sendMessageEmbeds(
                     removeEmbed.setDescription(
                             String.format("Removed [%s](%s)", song.getInfo().title, song.getInfo().uri))
                             .build())
                     .queue();
         } catch (NumberFormatException e) {
-            channel.sendMessage(
+            channel.sendMessageEmbeds(
                     removeEmbed.setDescription("Argument needs to be the index of the queue")
                             .setColor(Color.RED)
                             .build())
                     .queue();
         } catch (IndexOutOfBoundsException e) {
-            channel.sendMessage(
+            channel.sendMessageEmbeds(
                     removeEmbed.setDescription(
                             String.format("There are no songs at index **%d** of the queue", Integer.parseInt(ctx.getArgs().get(0))))
                             .setColor(Color.RED)

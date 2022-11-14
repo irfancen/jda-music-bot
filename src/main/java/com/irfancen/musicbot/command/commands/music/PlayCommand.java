@@ -35,7 +35,7 @@ public class PlayCommand implements ICommand {
         final TextChannel channel = ctx.getChannel();
 
         if (ctx.getArgs().isEmpty()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("Missing arguments")
                     .setColor(Color.RED)
                     .build())
@@ -54,7 +54,7 @@ public class PlayCommand implements ICommand {
             final VoiceChannel memberChannel = memberVoiceState.getChannel();
 
             if (!PermissionUtil.checkPermission(memberChannel, self, Permission.VOICE_CONNECT)) {
-                channel.sendMessage(new EmbedBuilder()
+                channel.sendMessageEmbeds(new EmbedBuilder()
                         .setDescription("I don't have permission to join the voice channel")
                         .setColor(Color.RED)
                         .build())
@@ -66,7 +66,7 @@ public class PlayCommand implements ICommand {
             channel.sendMessageFormat("Connected to `\uD83D\uDD0A`  **%s**.", memberChannel.getName()).queue();
         } else {
             if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-                channel.sendMessage(new EmbedBuilder()
+                channel.sendMessageEmbeds(new EmbedBuilder()
                         .setDescription("You need to be in the same voice channel as me for this to work")
                         .setColor(Color.RED)
                         .build())
@@ -76,7 +76,7 @@ public class PlayCommand implements ICommand {
         }
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the voice channel for this to work")
                     .setColor(Color.RED)
                     .build())

@@ -21,7 +21,7 @@ public class JoinCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("Already connected to a voice channel")
                     .setColor(Color.RED)
                     .build())
@@ -33,7 +33,7 @@ public class JoinCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in a voice channel for this command to work")
                     .setColor(Color.RED)
                     .build())
@@ -45,7 +45,7 @@ public class JoinCommand implements ICommand {
         final VoiceChannel memberChannel = memberVoiceState.getChannel();
 
         if (!PermissionUtil.checkPermission(memberChannel, self, Permission.VOICE_CONNECT)) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("I don't have permission to join the voice channel")
                     .setColor(Color.RED)
                     .build())

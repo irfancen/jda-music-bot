@@ -23,7 +23,7 @@ public class QueueCommand implements ICommand {
         final BlockingQueue<AudioTrack> queue = musicManager.scheduler.queue;
 
         if (musicManager.audioPlayer.getPlayingTrack() == null && queue.isEmpty()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("The queue is currently empty")
                     .setColor(Color.RED)
                     .build())
@@ -62,7 +62,7 @@ public class QueueCommand implements ICommand {
             embedBuilder.addField("", String.format("and **%d** more...", trackList.size() - trackCount), false);
         }
 
-        channel.sendMessage(embedBuilder.build()).queue();
+        channel.sendMessageEmbeds(embedBuilder.build()).queue();
     }
 
     @Override

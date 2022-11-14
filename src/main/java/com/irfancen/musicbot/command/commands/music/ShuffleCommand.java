@@ -23,7 +23,7 @@ public class ShuffleCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (!selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("I need to be in a voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -35,7 +35,7 @@ public class ShuffleCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -44,7 +44,7 @@ public class ShuffleCommand implements ICommand {
         }
 
         if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the same voice channel as me for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -55,7 +55,7 @@ public class ShuffleCommand implements ICommand {
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
 
         if (musicManager.audioPlayer.getPlayingTrack() == null && musicManager.scheduler.queue.isEmpty()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("The queue is currently empty")
                     .setColor(Color.RED)
                     .build())
@@ -71,7 +71,7 @@ public class ShuffleCommand implements ICommand {
             musicManager.scheduler.queue(track);
         }
 
-        channel.sendMessage(new EmbedBuilder()
+        channel.sendMessageEmbeds(new EmbedBuilder()
                 .setDescription("The queue has been shuffled")
                 .build())
                 .queue();

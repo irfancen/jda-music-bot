@@ -21,7 +21,7 @@ public class LeaveCommand implements ICommand {
         final GuildVoiceState selfVoiceState = self.getVoiceState();
 
         if (!selfVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("I need to be in a voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -33,7 +33,7 @@ public class LeaveCommand implements ICommand {
         final GuildVoiceState memberVoiceState = member.getVoiceState();
 
         if (!memberVoiceState.inVoiceChannel()) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the voice channel for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -42,7 +42,7 @@ public class LeaveCommand implements ICommand {
         }
 
         if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription("You need to be in the same voice channel as me for this to work")
                     .setColor(Color.RED)
                     .build())
@@ -59,7 +59,7 @@ public class LeaveCommand implements ICommand {
 
         final AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
-        channel.sendMessage(new EmbedBuilder()
+        channel.sendMessageEmbeds(new EmbedBuilder()
                 .setDescription("I have left the voice channel")
                 .build())
                 .queue();

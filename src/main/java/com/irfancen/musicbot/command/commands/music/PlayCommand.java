@@ -91,7 +91,9 @@ public class PlayCommand implements ICommand {
             if (args.contains("track")) {
                 try {
                     Document doc = Jsoup.connect(args).userAgent("Mozilla").data("name", "jsoup").get();
-                    args = doc.title().replace(" | Spotify", "");
+                    args = doc.title()
+                            .replace("Spotify - ", "")
+                            .replace("- song and lyrics by ", "");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -100,17 +102,15 @@ public class PlayCommand implements ICommand {
             } else if (args.contains("playlist")) {
                 try {
                     Document doc = Jsoup.connect(args).userAgent("Mozilla").data("name", "jsoup").get();
-                    Elements tracks = doc.select("a[href].EntityRowV2__Link-sc-ayafop-8");
+                    Elements tracks = doc.select("div[type=track]");
+
 
                     listArgs = new String[tracks.size()];
 
                     for (int i = 0; i < tracks.size(); i++) {
-                        listArgs[i] = "ytsearch: " + Jsoup.connect(tracks.get(i).attr("href"))
-                                .userAgent("Mozilla")
-                                .data("name", "jsoup")
-                                .get()
-                                .title()
-                                .replace(" | Spotify", "");
+                        String song = tracks.get(i).select("a[href*=/track/]").text();
+                        String artist = tracks.get(i).select("a[href*=/artist/]").text();
+                        listArgs[i] = "ytsearch: " + song + " " + artist;
                     }
 
                 } catch (IOException e) {

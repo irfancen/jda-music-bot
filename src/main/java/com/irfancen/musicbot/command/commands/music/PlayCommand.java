@@ -102,7 +102,7 @@ public class PlayCommand implements ICommand {
             } else if (args.contains("playlist") || args.contains("album")) {
                 try {
                     Document doc = Jsoup.connect(args).userAgent("Mozilla").data("name", "jsoup").get();
-                    Elements tracks = doc.select("div[type=track]");
+                    Elements tracks = doc.select("div[data-testid=track-row]");
 
                     listArgs = new String[tracks.size()];
 

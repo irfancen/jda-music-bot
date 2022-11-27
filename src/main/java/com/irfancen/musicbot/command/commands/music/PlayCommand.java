@@ -53,7 +53,14 @@ public class PlayCommand implements ICommand {
             final AudioManager audioManager = ctx.getGuild().getAudioManager();
             final VoiceChannel memberChannel = memberVoiceState.getChannel();
 
-            if (!PermissionUtil.checkPermission(memberChannel, self, Permission.VOICE_CONNECT)) {
+            if (!memberVoiceState.inVoiceChannel()) {
+                channel.sendMessageEmbeds(new EmbedBuilder()
+                                .setDescription("You need to be in a voice channel for this command to work")
+                                .setColor(Color.RED)
+                                .build())
+                        .queue();
+                return;
+            } else if (!PermissionUtil.checkPermission(memberChannel, self, Permission.VOICE_CONNECT)) {
                 channel.sendMessageEmbeds(new EmbedBuilder()
                         .setDescription("I don't have permission to join the voice channel")
                         .setColor(Color.RED)
@@ -64,15 +71,6 @@ public class PlayCommand implements ICommand {
 
             audioManager.openAudioConnection(memberChannel);
             channel.sendMessageFormat("Connected to `\uD83D\uDD0A`  **%s**.", memberChannel.getName()).queue();
-        } else {
-            if (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-                channel.sendMessageEmbeds(new EmbedBuilder()
-                        .setDescription("You need to be in the same voice channel as me for this to work")
-                        .setColor(Color.RED)
-                        .build())
-                        .queue();
-                return;
-            }
         }
 
         if (!memberVoiceState.inVoiceChannel()) {

@@ -1,20 +1,20 @@
 name: Build and Push to Dokku
 
 on:
-  push:
+  workflow_run: 
+    workflows: [ "Java CI with Gradle" ]
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    types: 
+      - completed
     
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Cloning repo
-        uses: actions/checkout@v2
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.1.1
         with:
-          fetch-depth: 0
-
+          name: Package
       - name: Set up qemu
         uses: docker/setup-qemu-action@v2
 

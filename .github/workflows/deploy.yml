@@ -11,12 +11,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
       - name: Download workflow artifact
         uses: dawidd6/action-download-artifact@v2.26.1
         with:
           workflow: gradle.yml
           name: Package
-          path: build/libs
+          path: ./build/libs
       - name: Set up qemu
         uses: docker/setup-qemu-action@v2
 

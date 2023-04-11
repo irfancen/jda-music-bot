@@ -37,11 +37,13 @@ jobs:
         with:
           context: .
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.DOCKER_TAG }}
 
       - name: Push to dokku
         uses: dokku/github-action@master
         with:
+          branch: 'main'
           git_remote_url: 'ssh://dokku@${{ secrets.DOKKU_HOST }}:22/${{ secrets.DOKKU_APP_NAME }}'
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           deploy_docker_image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.DOCKER_TAG }}

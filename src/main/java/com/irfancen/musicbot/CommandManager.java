@@ -7,9 +7,9 @@ import com.irfancen.musicbot.command.commands.PingCommand;
 import com.irfancen.musicbot.command.commands.admin.SetPrefixCommand;
 import com.irfancen.musicbot.command.commands.music.*;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -58,7 +58,7 @@ public class CommandManager {
         return result;
     }
 
-    void handle(GuildMessageReceivedEvent event, String prefix) {
+    void handle(MessageReceivedEvent event, String prefix) {
         String[] split = event.getMessage().getContentRaw()
                 .replaceFirst("(?i)" + Pattern.quote(prefix), "")
                 .split("\\s+");

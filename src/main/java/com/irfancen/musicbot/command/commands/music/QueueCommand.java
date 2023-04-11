@@ -7,7 +7,7 @@ import com.irfancen.musicbot.lavaplayer.PlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.awt.*;
 import java.time.Instant;
@@ -17,8 +17,8 @@ import java.util.concurrent.BlockingQueue;
 
 public class QueueCommand implements ICommand {
     @Override
-    public void handle(CommandContext ctx) {
-        final TextChannel channel = ctx.getChannel();
+    public void action(CommandContext ctx) {
+        final MessageChannel channel = ctx.getChannel();
         final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(ctx.getGuild());
         final BlockingQueue<AudioTrack> queue = musicManager.scheduler.queue;
 
@@ -63,6 +63,11 @@ public class QueueCommand implements ICommand {
         }
 
         channel.sendMessageEmbeds(embedBuilder.build()).queue();
+    }
+
+    @Override
+    public boolean check(CommandContext ctx) {
+        return true;
     }
 
     @Override

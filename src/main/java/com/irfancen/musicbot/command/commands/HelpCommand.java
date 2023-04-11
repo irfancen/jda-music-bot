@@ -4,7 +4,7 @@ import com.irfancen.musicbot.BotMapping;
 import com.irfancen.musicbot.CommandManager;
 import com.irfancen.musicbot.command.CommandContext;
 import com.irfancen.musicbot.command.ICommand;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ public class HelpCommand implements ICommand {
 
 
     @Override
-    public void handle(CommandContext ctx) {
+    public void action(CommandContext ctx) {
         List<String> args = ctx.getArgs();
-        TextChannel channel = ctx.getChannel();
+        MessageChannel channel = ctx.getChannel();
 
         String prefix = BotMapping.PREFIXES.get(ctx.getGuild().getIdLong());
 
@@ -29,11 +29,11 @@ public class HelpCommand implements ICommand {
 
             builder.append("List of commands:```");
             manager.getCommands().forEach(
-                    (it) -> builder.append("\n")
+                    it -> builder.append("\n")
                             .append(prefix)
                             .append(it)
             );
-            channel.sendMessage(builder.toString() + "```").queue();
+            channel.sendMessage(builder + "```").queue();
             return;
         }
 

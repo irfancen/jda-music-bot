@@ -6,7 +6,7 @@ import com.irfancen.musicbot.command.ICommand;
 import com.irfancen.musicbot.database.SQLiteDataSource;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -14,8 +14,8 @@ import java.util.List;
 
 public class SetPrefixCommand implements ICommand {
     @Override
-    public void handle(CommandContext ctx) {
-        final TextChannel channel = ctx.getChannel();
+    public void action(CommandContext ctx) {
+        final MessageChannel channel = ctx.getChannel();
         final List<String> args = ctx.getArgs();
         final Member member = ctx.getMember();
 

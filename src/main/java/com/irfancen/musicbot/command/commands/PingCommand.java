@@ -7,11 +7,11 @@ import net.dv8tion.jda.api.JDA;
 public class PingCommand implements ICommand {
 
     @Override
-    public void handle(CommandContext ctx) {
+    public void action(CommandContext ctx) {
         JDA jda = ctx.getJDA();
 
         jda.getRestPing().queue(
-                (ping) -> ctx.getChannel()
+                ping -> ctx.getChannel()
                         .sendMessageFormat(":ping_pong: REST: %sms | WS: %sms", ping, jda.getGatewayPing()).queue()
         );
     }

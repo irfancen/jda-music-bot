@@ -20,6 +20,7 @@ jobs:
           workflow: gradle.yml
           name: Package
           path: ./build/libs
+
       - name: Set up qemu
         uses: docker/setup-qemu-action@v2
 
@@ -43,6 +44,7 @@ jobs:
       - name: Push to dokku
         uses: dokku/github-action@master
         with:
+          pull: true
           git_remote_url: 'ssh://dokku@${{ secrets.DOKKU_HOST }}:22/${{ secrets.DOKKU_APP_NAME }}'
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           deploy_docker_image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ secrets.DOCKER_TAG }}

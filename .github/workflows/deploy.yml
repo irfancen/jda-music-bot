@@ -11,10 +11,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v2.1.1
+      - name: Download workflow artifact
+        uses: dawidd6/action-download-artifact@v2.26.1
         with:
+          workflow: Java CI with Gradle
           name: Package
+          path: build/libs
       - name: Set up qemu
         uses: docker/setup-qemu-action@v2
 

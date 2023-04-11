@@ -49,6 +49,10 @@ public class HelpCommand implements ICommand {
     }
 
     @Override
+    public boolean check(CommandContext ctx) {
+        return true;
+    }
+    @Override
     public String getName() {
         return "help";
     }

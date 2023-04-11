@@ -17,6 +17,11 @@ public class PingCommand implements ICommand {
     }
 
     @Override
+    public boolean check(CommandContext ctx) {
+        return true;
+    }
+
+    @Override
     public String getName() {
         return "ping";
     }

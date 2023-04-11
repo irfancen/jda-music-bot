@@ -10,6 +10,12 @@ group 'com.irfancen'
 version '1.0'
 sourceCompatibility = 11
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.irfancen.musicbot.Bot'
+    }
+}
+
 repositories {
     mavenCentral()
     maven {

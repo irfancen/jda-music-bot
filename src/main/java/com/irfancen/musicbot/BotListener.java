@@ -2,16 +2,14 @@ package com.irfancen.musicbot;
 
 import com.irfancen.musicbot.database.SQLiteDataSource;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import me.duncte123.botcommons.BotCommons;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,12 +23,12 @@ public class BotListener extends ListenerAdapter {
     }
 
     @Override
-    public void onReady(@Nonnull ReadyEvent event) {
+    public void onReady(@NotNull ReadyEvent event) {
         LOGGER.info("{} is ready", event.getJDA().getSelfUser().getAsTag());
     }
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         User user = event.getAuthor();
 
         if (user.isBot() || event.isWebhookMessage()) {
@@ -45,8 +43,6 @@ public class BotListener extends ListenerAdapter {
                 && user.getId().equals(Config.get("owner_id"))) {
             LOGGER.info("Shutting down bot.");
             event.getJDA().shutdown();
-            BotCommons.shutdown(event.getJDA());
-
             return;
         }
 

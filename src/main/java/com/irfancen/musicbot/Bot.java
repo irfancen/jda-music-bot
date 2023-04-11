@@ -17,17 +17,18 @@ public class Bot {
 
         EventWaiter waiter = new EventWaiter();
 
-        JDA api = JDABuilder.createDefault(
+        JDA jda = JDABuilder.createDefault(
                 Config.get("bot_token"),
                 GatewayIntent.GUILD_MEMBERS,
                 GatewayIntent.GUILD_MESSAGES,
+                GatewayIntent.MESSAGE_CONTENT,
                 GatewayIntent.GUILD_VOICE_STATES,
                 GatewayIntent.GUILD_MESSAGE_REACTIONS
         )
                 .disableCache(
                         CacheFlag.CLIENT_STATUS,
                         CacheFlag.ACTIVITY,
-                        CacheFlag.EMOTE
+                        CacheFlag.EMOJI
                 )
                 .enableCache(CacheFlag.VOICE_STATE)
                 .addEventListeners(new BotListener(waiter), waiter)

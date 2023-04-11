@@ -11,8 +11,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 import java.awt.*;
 import java.time.Instant;
@@ -43,7 +44,7 @@ public class PlayerManager {
     }
 
     public GuildMusicManager getMusicManager(Guild guild) {
-        return this.musicManagers.computeIfAbsent(guild.getIdLong(), (guildId) -> {
+        return this.musicManagers.computeIfAbsent(guild.getIdLong(), guildId -> {
             final GuildMusicManager guildMusicManager = new GuildMusicManager(this.audioPlayerManager, guild);
 
             guild.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());
@@ -52,14 +53,15 @@ public class PlayerManager {
         });
     }
 
-    public void loadAndPlay(TextChannel channel, CommandContext ctx, EventWaiter waiter, String trackUrl) {
-        final GuildMusicManager musicManager = this.getMusicManager(channel.getGuild());
+    public void loadAndPlay(MessageChannel channel, CommandContext ctx, EventWaiter waiter, String trackUrl) {
+
+        final GuildMusicManager musicManager = this.getMusicManager(ctx.getGuild());
 
         this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
                 musicManager.scheduler.queue(track);
-                channel.sendMessage(new EmbedBuilder()
+                channel.sendMessageEmbeds(new EmbedBuilder()
                         .setDescription(String.format("Queued [%s](%s)", track.getInfo().title, track.getInfo().uri))
                         .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                         .build())
@@ -72,7 +74,7 @@ public class PlayerManager {
 
                 if (tracks.size() == 1) {
                     musicManager.scheduler.queue(tracks.get(0));
-                    channel.sendMessage(new EmbedBuilder()
+                    channel.sendMessageEmbeds(new EmbedBuilder()
                             .setDescription(String.format("Queued [%s](%s)", tracks.get(0).getInfo().title, tracks.get(0).getInfo().uri))
                             .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                             .build())
@@ -83,7 +85,7 @@ public class PlayerManager {
                         AudioTrack pickTrack = tracks.get(i);
                         pick.add(String.format("**%2d.**\t[%s](%s)\t[%s]", i+1, pickTrack.getInfo().title, pickTrack.getInfo().uri, timeFormatter(pickTrack.getDuration())));
                     }
-                    channel.sendMessage(new EmbedBuilder()
+                    channel.sendMessageEmbeds(new EmbedBuilder()
                             .setTitle("Choose a Track")
                             .setDescription(String.join("\n", pick))
                             .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
@@ -94,16 +96,16 @@ public class PlayerManager {
                                 List<String> emotes = new ArrayList<>(emote.keySet());
                                 Collections.sort(emotes);
                                 for (String emj : emotes) {
-                                    message.addReaction(emj).queue();
+                                    message.addReaction(Emoji.fromFormatted(emj)).queue();
                                 }
 
                                 waiter.waitForEvent(
-                                        GuildMessageReactionAddEvent.class,
-                                        (e) -> e.getMessageIdLong() == message.getIdLong() && e.getUser() == ctx.getAuthor(),
-                                        (e) -> {
-                                            int index = emote.get(e.getReactionEmote().getEmoji());
+                                        MessageReactionAddEvent.class,
+                                        e -> e.getMessageIdLong() == message.getIdLong() && e.getUser() == ctx.getAuthor(),
+                                        e -> {
+                                            int index = emote.get(e.getReaction().getEmoji().getFormatted());
                                             if (index == -1) {
-                                                channel.sendMessage(new EmbedBuilder()
+                                                channel.sendMessageEmbeds(new EmbedBuilder()
                                                         .setDescription("Operation cancelled")
                                                         .setColor(Color.RED)
                                                         .build())
@@ -114,7 +116,7 @@ public class PlayerManager {
                                             AudioTrack track = tracks.get(index);
                                             musicManager.scheduler.queue(track);
                                             message.delete().queue();
-                                            channel.sendMessage(new EmbedBuilder()
+                                            channel.sendMessageEmbeds(new EmbedBuilder()
                                                     .setDescription(String.format("Queued [%s](%s)", track.getInfo().title, track.getInfo().uri))
                                                     .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                                                     .build())
@@ -128,7 +130,7 @@ public class PlayerManager {
                     for (final AudioTrack track : tracks) {
                         musicManager.scheduler.queue(track);
                     }
-                    channel.sendMessage(new EmbedBuilder()
+                    channel.sendMessageEmbeds(new EmbedBuilder()
                             .setDescription(String.format("Queued **%d** songs", tracks.size()))
                             .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                             .build())
@@ -138,7 +140,7 @@ public class PlayerManager {
 
             @Override
             public void noMatches() {
-                channel.sendMessage(new EmbedBuilder()
+                channel.sendMessageEmbeds(new EmbedBuilder()
                         .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
                         .setColor(Color.RED)
                         .build())
@@ -147,7 +149,7 @@ public class PlayerManager {
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                channel.sendMessage(new EmbedBuilder()
+                channel.sendMessageEmbeds(new EmbedBuilder()
                         .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
                         .setColor(Color.RED)
                         .build())
@@ -156,22 +158,22 @@ public class PlayerManager {
         });
     }
 
-    public void loadAndPlay(TextChannel channel, CommandContext ctx, EventWaiter waiter, String[] tracks) {
-        final GuildMusicManager musicManager = this.getMusicManager(channel.getGuild());
+    public void loadAndPlay(MessageChannel channel, CommandContext ctx, EventWaiter waiter, String[] tracks) {
+        final GuildMusicManager musicManager = this.getMusicManager(ctx.getGuild());
 
         if (tracks.length == 1) {
             String trackUrl = tracks[0];
             this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
                 @Override
                 public void trackLoaded(AudioTrack track) {
-
+                    // All requests from Spotify counts as a Playlist
                 }
 
                 @Override
                 public void playlistLoaded(AudioPlaylist playlist) {
                     AudioTrack track = playlist.getTracks().get(0);
                     musicManager.scheduler.queue(track);
-                    channel.sendMessage(new EmbedBuilder()
+                    channel.sendMessageEmbeds(new EmbedBuilder()
                             .setDescription(String.format("Queued [%s](%s)", track.getInfo().title, track.getInfo().uri))
                             .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                             .build())
@@ -180,7 +182,7 @@ public class PlayerManager {
 
                 @Override
                 public void noMatches() {
-                    channel.sendMessage(new EmbedBuilder()
+                    channel.sendMessageEmbeds(new EmbedBuilder()
                             .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
                             .setColor(Color.RED)
                             .build())
@@ -189,7 +191,7 @@ public class PlayerManager {
 
                 @Override
                 public void loadFailed(FriendlyException exception) {
-                    channel.sendMessage(new EmbedBuilder()
+                    channel.sendMessageEmbeds(new EmbedBuilder()
                             .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
                             .setColor(Color.RED)
                             .build())
@@ -201,7 +203,7 @@ public class PlayerManager {
                 this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
                     @Override
                     public void trackLoaded(AudioTrack track) {
-
+                        // All requests from Spotify counts as a Playlist
                     }
 
                     @Override
@@ -212,7 +214,7 @@ public class PlayerManager {
 
                     @Override
                     public void noMatches() {
-                        channel.sendMessage(new EmbedBuilder()
+                        channel.sendMessageEmbeds(new EmbedBuilder()
                                 .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
                                 .setColor(Color.RED)
                                 .build())
@@ -221,7 +223,7 @@ public class PlayerManager {
 
                     @Override
                     public void loadFailed(FriendlyException exception) {
-                        channel.sendMessage(new EmbedBuilder()
+                        channel.sendMessageEmbeds(new EmbedBuilder()
                                 .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
                                 .setColor(Color.RED)
                                 .build())
@@ -229,7 +231,7 @@ public class PlayerManager {
                     }
                 });
             }
-            channel.sendMessage(new EmbedBuilder()
+            channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription(String.format("Queued **%d** songs", tracks.length))
                     .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                     .build())

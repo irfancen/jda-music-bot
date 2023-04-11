@@ -23,13 +23,16 @@ repositories {
         name 'm2-duncte123'
         url 'https://m2.duncte123.dev/releases'
     }
+    maven {
+        url "https://m2.chew.pro/snapshots"
+    }
     jcenter()
 }
 
 dependencies {
-    implementation group: 'net.dv8tion', name: 'JDA', version: '4.4.1_353'
-    implementation group: 'com.jagrosh', name: 'jda-utilities', version: '3.0.5'
-    implementation group: 'me.duncte123', name: 'botCommons', version: '2.3.14'
+    implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-beta.8'
+    // implementation group: 'com.jagrosh', name: 'jda-utilities', version: '3.0.5'
+    implementation group: 'pw.chew', name: 'jda-chewtils', version: '2.0-SNAPSHOT'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.6'
     implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '2.3.2'
 

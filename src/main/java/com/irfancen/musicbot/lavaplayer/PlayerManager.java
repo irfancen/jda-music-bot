@@ -150,7 +150,7 @@ public class PlayerManager {
             @Override
             public void loadFailed(FriendlyException exception) {
                 channel.sendMessageEmbeds(new EmbedBuilder()
-                        .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                        .setDescription(String.format("Error while loading the %s **%s**", trackUrl.contains("https://www.youtube.com/playlist") ? "playlist" : "track", trackUrl.replaceFirst("ytsearch: ", "")))
                         .setColor(Color.RED)
                         .build())
                         .queue();

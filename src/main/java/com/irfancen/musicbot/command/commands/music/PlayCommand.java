@@ -57,6 +57,8 @@ public class PlayCommand implements ICommand {
         } else {
             if (!isUrl(args)) {
                 args = "ytsearch: " + args;
+            } else if (args.startsWith("https://www.youtube.com/watch")) {
+                args = args.substring(0, !args.contains("&list") ? args.length() : args.indexOf("&list"));
             }
             PlayerManager.getInstance().loadAndPlay(channel, ctx, waiter, args);
         }

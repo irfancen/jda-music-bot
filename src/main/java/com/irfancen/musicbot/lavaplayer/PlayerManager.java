@@ -26,6 +26,10 @@ public class PlayerManager {
     private final Map<Long, GuildMusicManager> musicManagers;
     private final AudioPlayerManager audioPlayerManager;
     final Map<String, Integer> emote;
+    static final String YT_SEARCH = "ytsearch: ";
+    static final String QUEUED = "Queued [%s](%s)";
+    static final String REQUESTED = "Requested by %s";
+    static final String SONG_NOT_FOUND = "No songs found for **%s**";
 
     public PlayerManager() {
         this.musicManagers = new HashMap<>();
@@ -62,8 +66,8 @@ public class PlayerManager {
             public void trackLoaded(AudioTrack track) {
                 musicManager.scheduler.queue(track);
                 channel.sendMessageEmbeds(new EmbedBuilder()
-                        .setDescription(String.format("Queued [%s](%s)", track.getInfo().title, track.getInfo().uri))
-                        .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                        .setDescription(String.format(QUEUED, track.getInfo().title, track.getInfo().uri))
+                        .setFooter(String.format(REQUESTED, ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                         .build())
                         .queue();
             }
@@ -75,8 +79,8 @@ public class PlayerManager {
                 if (tracks.size() == 1) {
                     musicManager.scheduler.queue(tracks.get(0));
                     channel.sendMessageEmbeds(new EmbedBuilder()
-                            .setDescription(String.format("Queued [%s](%s)", tracks.get(0).getInfo().title, tracks.get(0).getInfo().uri))
-                            .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                            .setDescription(String.format(QUEUED, tracks.get(0).getInfo().title, tracks.get(0).getInfo().uri))
+                            .setFooter(String.format(REQUESTED, ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                             .build())
                             .queue();
                 } else if (playlist.isSearchResult()) {
@@ -88,7 +92,7 @@ public class PlayerManager {
                     channel.sendMessageEmbeds(new EmbedBuilder()
                             .setTitle("Choose a Track")
                             .setDescription(String.join("\n", pick))
-                            .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                            .setFooter(String.format(REQUESTED, ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                             .setColor(ctx.getMember().getColor())
                             .setTimestamp(Instant.now())
                             .build())
@@ -117,8 +121,8 @@ public class PlayerManager {
                                             musicManager.scheduler.queue(track);
                                             message.delete().queue();
                                             channel.sendMessageEmbeds(new EmbedBuilder()
-                                                    .setDescription(String.format("Queued [%s](%s)", track.getInfo().title, track.getInfo().uri))
-                                                    .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                                                    .setDescription(String.format(QUEUED, track.getInfo().title, track.getInfo().uri))
+                                                    .setFooter(String.format(REQUESTED, ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                                                     .build())
                                                     .queue();
                                         },
@@ -132,7 +136,7 @@ public class PlayerManager {
                     }
                     channel.sendMessageEmbeds(new EmbedBuilder()
                             .setDescription(String.format("Queued **%d** songs", tracks.size()))
-                            .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                            .setFooter(String.format(REQUESTED, ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                             .build())
                             .queue();
                 }
@@ -141,7 +145,7 @@ public class PlayerManager {
             @Override
             public void noMatches() {
                 channel.sendMessageEmbeds(new EmbedBuilder()
-                        .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                        .setDescription(String.format(SONG_NOT_FOUND, trackUrl.replaceFirst(YT_SEARCH, "")))
                         .setColor(Color.RED)
                         .build())
                         .queue();
@@ -150,7 +154,7 @@ public class PlayerManager {
             @Override
             public void loadFailed(FriendlyException exception) {
                 channel.sendMessageEmbeds(new EmbedBuilder()
-                        .setDescription(String.format("Error while loading the %s **%s**", trackUrl.contains("https://www.youtube.com/playlist") ? "playlist" : "track", trackUrl.replaceFirst("ytsearch: ", "")))
+                        .setDescription(String.format("Error while loading the %s **%s**", trackUrl.contains("https://www.youtube.com/playlist") ? "playlist" : "track", trackUrl.replaceFirst(YT_SEARCH, "")))
                         .setColor(Color.RED)
                         .build())
                         .queue();
@@ -174,8 +178,8 @@ public class PlayerManager {
                     AudioTrack track = playlist.getTracks().get(0);
                     musicManager.scheduler.queue(track);
                     channel.sendMessageEmbeds(new EmbedBuilder()
-                            .setDescription(String.format("Queued [%s](%s)", track.getInfo().title, track.getInfo().uri))
-                            .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                            .setDescription(String.format(QUEUED, track.getInfo().title, track.getInfo().uri))
+                            .setFooter(String.format(REQUESTED, ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                             .build())
                             .queue();
                 }
@@ -183,7 +187,7 @@ public class PlayerManager {
                 @Override
                 public void noMatches() {
                     channel.sendMessageEmbeds(new EmbedBuilder()
-                            .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                            .setDescription(String.format(SONG_NOT_FOUND, trackUrl.replaceFirst(YT_SEARCH, "")))
                             .setColor(Color.RED)
                             .build())
                             .queue();
@@ -192,7 +196,7 @@ public class PlayerManager {
                 @Override
                 public void loadFailed(FriendlyException exception) {
                     channel.sendMessageEmbeds(new EmbedBuilder()
-                            .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                            .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst(YT_SEARCH, "")))
                             .setColor(Color.RED)
                             .build())
                             .queue();
@@ -215,7 +219,7 @@ public class PlayerManager {
                     @Override
                     public void noMatches() {
                         channel.sendMessageEmbeds(new EmbedBuilder()
-                                .setDescription(String.format("No songs found for **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                                .setDescription(String.format(SONG_NOT_FOUND, trackUrl.replaceFirst(YT_SEARCH, "")))
                                 .setColor(Color.RED)
                                 .build())
                                 .queue();
@@ -224,7 +228,7 @@ public class PlayerManager {
                     @Override
                     public void loadFailed(FriendlyException exception) {
                         channel.sendMessageEmbeds(new EmbedBuilder()
-                                .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst("ytsearch: ", "")))
+                                .setDescription(String.format("Error while loading the track **%s**", trackUrl.replaceFirst(YT_SEARCH, "")))
                                 .setColor(Color.RED)
                                 .build())
                                 .queue();
@@ -233,7 +237,7 @@ public class PlayerManager {
             }
             channel.sendMessageEmbeds(new EmbedBuilder()
                     .setDescription(String.format("Queued **%d** songs", tracks.length))
-                    .setFooter(String.format("Requested by %s", ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
+                    .setFooter(String.format(REQUESTED, ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                     .build())
                     .queue();
         }

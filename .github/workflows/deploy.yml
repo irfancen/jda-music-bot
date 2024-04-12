@@ -17,7 +17,7 @@ jobs:
       - name: Get App Version
         id: app_version
         run: |
-          VERSION=$(grep version build.gradle | awk '{print $3}' | tr -d \')
+          VERSION=$(grep 'version' gradle.properties | cut -d'=' -f2)
           echo "::set-output name=version::$VERSION"
 
       - name: Set up qemu

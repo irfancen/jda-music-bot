@@ -7,7 +7,7 @@ plugins {
 mainClassName = 'com.irfancen.musicbot.Bot'
 
 group 'com.irfancen'
-version '1.0'
+version '1.0.0'
 sourceCompatibility = 11
 
 repositories {

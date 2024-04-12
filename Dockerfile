@@ -1,9 +1,23 @@
-FROM gradle:6.7-jdk11
+FROM gradle:6.7-jdk11 AS build
+
+WORKDIR /app
+
+COPY build.gradle settings.gradle /app/
+COPY gradle /app/gradle
+COPY --chown=gradle:gradle . /home/gradle/src
+USER root
+RUN chown -R gradle /home/gradle/src
+
+RUN gradle build || return 0
+COPY . .
+RUN gradle clean build
+
+FROM gradle:6.7-jdk11 AS prod
 
 ENV BOT_TOKEN ${BOT_TOKEN}
 ENV PREFIX ${PREFIX}
 ENV OWNER_ID ${OWNER_ID}
 
 WORKDIR /app
-COPY ./build/libs/musicbot-1.0-all.jar /app
-CMD ["java","-jar","musicbot-1.0-all.jar"]
+COPY --from=build app/build/libs/musicbot-*-all.jar /app/app.jar
+ENTRYPOINT exec java -jar app.jar

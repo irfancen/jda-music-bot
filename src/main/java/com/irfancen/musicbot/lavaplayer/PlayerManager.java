@@ -12,7 +12,9 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import dev.lavalink.youtube.clients.AndroidTestsuiteWithThumbnail;
 import dev.lavalink.youtube.clients.MusicWithThumbnail;
+import dev.lavalink.youtube.clients.TvHtml5EmbeddedWithThumbnail;
 import dev.lavalink.youtube.clients.WebWithThumbnail;
+import dev.lavalink.youtube.clients.skeleton.Client;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -40,7 +42,8 @@ public class PlayerManager {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
         this.emote = new HashMap<>();
 
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new MusicWithThumbnail(), new WebWithThumbnail(), new AndroidTestsuiteWithThumbnail());
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new MusicWithThumbnail(), new WebWithThumbnail(), new AndroidTestsuiteWithThumbnail(), new TvHtml5EmbeddedWithThumbnail() });
+
         this.audioPlayerManager.registerSourceManager(youtube);
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
         AudioSourceManagers.registerLocalSource(this.audioPlayerManager);

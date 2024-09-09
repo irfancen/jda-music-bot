@@ -29,6 +29,9 @@ repositories {
     maven {
         url = "https://s01.oss.sonatype.org/content/repositories/snapshots"
     }
+    maven {
+        url = "https://maven.lavalink.dev/releases"
+    }
 }
 
 dependencies {
@@ -37,7 +40,8 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.2'
     implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '2.3.2'
 
-    implementation group: 'dev.arbjerg', name: 'lavaplayer', version:'0eaeee195f0315b2617587aa3537fa202df07ddc-SNAPSHOT'
+    implementation group: 'dev.arbjerg', name: 'lavaplayer', version:'2.2.1'
+    implementation group: 'dev.lavalink.youtube', name: 'v2', version: '1.7.2'
 
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.0'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.45.1.0'

@@ -1,5 +1,6 @@
 package com.irfancen.musicbot.lavaplayer;
 
+import com.irfancen.musicbot.Config;
 import com.irfancen.musicbot.command.CommandContext;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
@@ -43,6 +44,7 @@ public class PlayerManager {
         this.emote = new HashMap<>();
 
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new MusicWithThumbnail(), new WebWithThumbnail(), new AndroidTestsuiteWithThumbnail(), new TvHtml5EmbeddedWithThumbnail() });
+        youtube.useOauth2(Config.get("REFRESH_TOKEN"), true);
 
         this.audioPlayerManager.registerSourceManager(youtube);
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);

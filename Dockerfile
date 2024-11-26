@@ -17,6 +17,8 @@ FROM gradle:6.7-jdk11 AS prod
 ENV BOT_TOKEN ${BOT_TOKEN}
 ENV PREFIX ${PREFIX}
 ENV OWNER_ID ${OWNER_ID}
+ENV PO_TOKEN ${PO_TOKEN}
+ENV VISITOR_DATA ${VISITOR_DATA}
 
 WORKDIR /app
 COPY --from=build app/build/libs/musicbot-*-all.jar /app/app.jar

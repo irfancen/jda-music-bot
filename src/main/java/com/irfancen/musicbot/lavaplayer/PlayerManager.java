@@ -40,7 +40,7 @@ public class PlayerManager {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
         this.emote = new HashMap<>();
 
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new Web() });
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new WebEmbedded(), new WebEmbeddedWithThumbnail(), new MWeb(), new AndroidVr(), new Tv(), new TvHtml5Embedded() });
         Web.setPoTokenAndVisitorData(Config.get("PO_TOKEN"),Config.get("VISITOR_DATA"));
 
         this.audioPlayerManager.registerSourceManager(youtube);

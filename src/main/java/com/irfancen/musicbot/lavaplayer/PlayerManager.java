@@ -40,7 +40,13 @@ public class PlayerManager {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
         this.emote = new HashMap<>();
 
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new WebEmbedded(), new WebEmbeddedWithThumbnail(), new Tv(), new TvHtml5Embedded() });
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true,  new Client[] {
+                new Music(setupClientOptions(false, false, false, true)),
+                new WebEmbedded(setupClientOptions(true, true, false, true)),
+                new WebEmbeddedWithThumbnail(setupClientOptions(true, true, false, false)),
+                new Tv(setupClientOptions(true, true, false, true)),
+                new TvHtml5Embedded(setupClientOptions(true, true, false, false))
+        });
         youtube.useOauth2(null, false);
         //        Web.setPoTokenAndVisitorData(Config.get("PO_TOKEN"),Config.get("VISITOR_DATA"));
 
@@ -270,5 +276,14 @@ public class PlayerManager {
         } else {
             return String.format("%02d:%02d", minute, second);
         }
+    }
+
+    private ClientOptions setupClientOptions(boolean playback, boolean playlistLoading, boolean videoLoading, boolean searching) {
+        ClientOptions clientOptions = new ClientOptions();
+        clientOptions.setPlayback(playback);
+        clientOptions.setPlaylistLoading(playlistLoading);
+        clientOptions.setVideoLoading(videoLoading);
+        clientOptions.setSearching(searching);
+        return clientOptions;
     }
 }

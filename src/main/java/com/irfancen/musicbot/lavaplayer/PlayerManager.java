@@ -40,14 +40,13 @@ public class PlayerManager {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
         this.emote = new HashMap<>();
 
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true,  new Client[] {
-                new Music(setupClientOptions(false, false, false, true)),
-                new WebEmbedded(setupClientOptions(true, true, false, true)),
-                new WebEmbeddedWithThumbnail(setupClientOptions(true, true, false, false)),
-                new Tv(setupClientOptions(true, true, false, true)),
-                new TvHtml5Embedded(setupClientOptions(true, true, false, false))
-        });
-        youtube.useOauth2(null, false);
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new WebEmbedded(), new TvHtml5Embedded() });
+
+        if (!Config.get("REFRESH_TOKEN").isEmpty()) {
+            youtube.useOauth2(Config.get("REFRESH_TOKEN"), true);
+        } else {
+            youtube.useOauth2(null, false);
+        }
         //        Web.setPoTokenAndVisitorData(Config.get("PO_TOKEN"),Config.get("VISITOR_DATA"));
 
         this.audioPlayerManager.registerSourceManager(youtube);

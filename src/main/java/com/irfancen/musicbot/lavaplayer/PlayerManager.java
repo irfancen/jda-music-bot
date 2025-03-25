@@ -40,7 +40,7 @@ public class PlayerManager {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
         this.emote = new HashMap<>();
 
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new WebEmbedded(), new TvHtml5Embedded(), new Tv(), new Ios(), new Music() });
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new WebEmbedded(), new TvHtml5Embedded() });
 
         if (!Config.get("REFRESH_TOKEN").isEmpty()) {
             youtube.useOauth2(Config.get("REFRESH_TOKEN"), true);

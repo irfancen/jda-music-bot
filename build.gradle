@@ -32,6 +32,9 @@ repositories {
     maven {
         url = "https://maven.lavalink.dev/releases"
     }
+    maven {
+        url = "https://maven.lavalink.dev/snapshots"
+    }
 }
 
 dependencies {
@@ -41,7 +44,7 @@ dependencies {
     implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '2.3.2'
 
     implementation group: 'dev.arbjerg', name: 'lavaplayer', version:'2.2.1'
-    implementation group: 'dev.lavalink.youtube', name: 'v2', version: '008faf9f7a39c3f98d24fc1d5c98a9dc960a377c-SNAPSHOT'
+    implementation group: 'dev.lavalink.youtube', name: 'v2', version: '294d3c50380705fe8de585aabd960f612f79d083-SNAPSHOT'
 
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.0'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.45.1.0'

@@ -40,14 +40,15 @@ public class PlayerManager {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
         this.emote = new HashMap<>();
 
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new WebEmbedded(), new TvHtml5Embedded() });
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(true, new Client[] { new Web(), new WebEmbedded(), new Tv(), new TvHtml5Embedded() });
 
         if (!Config.get("REFRESH_TOKEN").isEmpty()) {
             youtube.useOauth2(Config.get("REFRESH_TOKEN"), true);
         } else {
             youtube.useOauth2(null, false);
         }
-        //        Web.setPoTokenAndVisitorData(Config.get("PO_TOKEN"),Config.get("VISITOR_DATA"));
+
+        Web.setPoTokenAndVisitorData(Config.get("PO_TOKEN"),Config.get("VISITOR_DATA"));
 
         this.audioPlayerManager.registerSourceManager(youtube);
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
@@ -149,7 +150,7 @@ public class PlayerManager {
                         musicManager.scheduler.queue(track);
                     }
                     channel.sendMessageEmbeds(new EmbedBuilder()
-                            .setDescription(String.format("Queued **%d** songs", tracks.size()))
+                            .setDescription(String.format("Queueing **%d** songs", tracks.size()))
                             .setFooter(String.format(REQUESTED, ctx.getAuthor().getName()), ctx.getAuthor().getAvatarUrl())
                             .build())
                             .queue();

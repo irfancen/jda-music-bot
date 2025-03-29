@@ -143,7 +143,7 @@ public class PlayCommand implements ICommand {
         try {
             Document doc = Jsoup.connect(args).userAgent("Mozilla").data("name", "jsoup").get();
             args = doc.title()
-                    .replace("Spotify - ", "")
+                    .replace(" | Spotify", "")
                     .replace("- song and lyrics by ", "");
         } catch (IOException e) {
             e.printStackTrace();

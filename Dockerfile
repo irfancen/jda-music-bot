@@ -22,4 +22,4 @@ ENV VISITOR_DATA ${VISITOR_DATA}
 
 WORKDIR /app
 COPY --from=build app/build/libs/musicbot-*-all.jar /app/app.jar
-ENTRYPOINT exec java -jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

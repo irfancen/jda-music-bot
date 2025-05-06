@@ -7,16 +7,14 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class TrackScheduler extends AudioEventAdapter {
     public final AudioPlayer player;
     public final BlockingQueue<AudioTrack> queue;
     public boolean repeating = false;
     public final Guild guild;
+    private ScheduledFuture<?> timer;
 
     public TrackScheduler(AudioPlayer player, Guild guild) {
         this.player = player;
@@ -28,6 +26,8 @@ public class TrackScheduler extends AudioEventAdapter {
         if (!this.player.startTrack(track, true)) {
             this.queue.offer(track);
         }
+        // Resets the timer
+        timer.cancel(true);
     }
 
     public void nextTrack() {
@@ -37,8 +37,8 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (queue.isEmpty()) {
-            Executors.newSingleThreadScheduledExecutor().schedule(() -> {
-                //Only disconnect if nothing has been played during the time.
+             timer = Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+                // Only disconnect if nothing has been played during the time.
                 if (player.getPlayingTrack() == null) {
                     this.player.startTrack(null, false);
 

@@ -13,18 +13,21 @@ sourceCompatibility = 11
 repositories {
     mavenCentral()
     maven {
-        url "https://jitpack.io"
+        url = "https://jitpack.io"
     }
     maven {
         name 'm2-dv8tion'
-        url 'https://m2.dv8tion.net/releases'
+        url = 'https://m2.dv8tion.net/releases'
     }
     maven {
         name 'm2-duncte123'
-        url 'https://m2.duncte123.dev/releases'
+        url = 'https://m2.duncte123.dev/releases'
     }
     maven {
-        url "https://m2.chew.pro/snapshots"
+        url = "https://m2.chew.pro/snapshots"
+    }
+    maven {
+        url = "https://m2.chew.pro/releases"
     }
     maven {
         url = "https://s01.oss.sonatype.org/content/repositories/snapshots"
@@ -38,13 +41,13 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-beta.20'
-    implementation group: 'pw.chew', name: 'jda-chewtils', version: '2.0-SNAPSHOT'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.2'
+    implementation group: 'net.dv8tion', name: 'JDA', version: '5.5.1'
+    implementation group: 'pw.chew', name: 'jda-chewtils', version: '2.1'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.13'
     implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '2.3.2'
 
     implementation group: 'dev.arbjerg', name: 'lavaplayer', version:'2.2.1'
-    implementation group: 'dev.lavalink.youtube', name: 'v2', version: '334d4a094fc9427a83d3d8c4793ff46451e8308c-SNAPSHOT'
+    implementation group: 'dev.lavalink.youtube', name: 'v2', version: '1.13.2'
 
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.0'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.45.1.0'

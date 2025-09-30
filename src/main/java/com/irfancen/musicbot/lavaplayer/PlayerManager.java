@@ -44,15 +44,8 @@ public class PlayerManager {
         YoutubeSourceOptions options = new YoutubeSourceOptions()
                 .setRemoteCipherUrl(Config.get("YT_CIPHER_URL"), Config.get("YT_CIPHER_AUTH"));
 
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(options, new Client[] { new TvHtml5Embedded(), new Music(), new Web(), new Tv() }); //new YoutubeAudioSourceManager(true, new Client[] { new TvHtml5Embedded(), new Music(), new Web(), new Tv() });
-
-//        if (!Config.get("REFRESH_TOKEN").isEmpty()) {
-//            youtube.useOauth2(Config.get("REFRESH_TOKEN"), true);
-//        } else {
-//            youtube.useOauth2(null, false);
-//        }
-//
-//        Web.setPoTokenAndVisitorData(Config.get("PO_TOKEN"),Config.get("VISITOR_DATA"));
+        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(options,
+                new Client[] { new AndroidVr(), new Music(), new TvHtml5Embedded(), new Web(), new Tv() });
 
         this.audioPlayerManager.registerSourceManager(youtube);
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);

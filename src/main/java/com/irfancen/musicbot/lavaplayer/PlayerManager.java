@@ -45,7 +45,7 @@ public class PlayerManager {
                 .setRemoteCipherUrl(Config.get("YT_CIPHER_URL"), Config.get("YT_CIPHER_AUTH"));
 
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(options,
-                new Client[] { new AndroidVr(), new Music(), new TvHtml5Embedded(), new Web(), new Tv() });
+                new Client[] { new Android(), new Ios(), new WebEmbedded(), new AndroidVr(), new Music(), new Web(), new MWeb() });
 
         this.audioPlayerManager.registerSourceManager(youtube);
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);

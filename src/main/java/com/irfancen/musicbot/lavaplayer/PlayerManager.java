@@ -41,11 +41,53 @@ public class PlayerManager {
         this.audioPlayerManager = new DefaultAudioPlayerManager();
         this.emote = new HashMap<>();
 
-        YoutubeSourceOptions options = new YoutubeSourceOptions()
-                .setRemoteCipherUrl(Config.get("YT_CIPHER_URL"), Config.get("YT_CIPHER_AUTH"));
-
-        YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(options,
-                new Client[] { new Android(), new Ios(), new WebEmbedded(), new AndroidVr(), new Music(), new Web(), new MWeb() });
+        YoutubeAudioSourceManager youtube;
+        YoutubeSourceOptions options = new YoutubeSourceOptions();
+        switch (Config.get("AUTH_METHOD")) {
+            case "potoken":
+                youtube = new YoutubeAudioSourceManager(options,
+                        new TvHtml5EmbeddedWithThumbnail(),
+                        new Tv(),
+                        new WebEmbeddedWithThumbnail(),
+                        new WebWithThumbnail(),
+                        new Music()
+                );
+                Web.setPoTokenAndVisitorData(Config.get("PO_TOKEN"),Config.get("VISITOR_DATA"));
+                break;
+            case "oauth":
+                youtube = new YoutubeAudioSourceManager(options,
+                        new TvHtml5EmbeddedWithThumbnail(),
+                        new Tv(),
+                        new WebEmbeddedWithThumbnail(),
+                        new WebWithThumbnail(),
+                        new Music()
+                );
+                if (!Config.get("REFRESH_TOKEN").isEmpty()) {
+                    youtube.useOauth2(Config.get("REFRESH_TOKEN"), true);
+                } else {
+                    youtube.useOauth2(null, false);
+                }
+                break;
+            case "cipher":
+                options.setRemoteCipherUrl(Config.get("YT_CIPHER_URL"), Config.get("YT_CIPHER_AUTH"));
+                youtube = new YoutubeAudioSourceManager(options,
+                        new TvHtml5EmbeddedWithThumbnail(),
+                        new Tv(),
+                        new WebEmbeddedWithThumbnail(),
+                        new WebWithThumbnail(),
+                        new Music()
+                );
+                break;
+            default:
+                youtube = new YoutubeAudioSourceManager(options,
+                        new TvHtml5EmbeddedWithThumbnail(),
+                        new Tv(),
+                        new WebEmbeddedWithThumbnail(),
+                        new WebWithThumbnail(),
+                        new Music()
+                );
+                break;
+        }
 
         this.audioPlayerManager.registerSourceManager(youtube);
         AudioSourceManagers.registerRemoteSources(this.audioPlayerManager, com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);

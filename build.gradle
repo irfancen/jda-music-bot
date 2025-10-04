@@ -47,7 +47,7 @@ dependencies {
     implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '2.3.2'
 
     implementation group: 'dev.arbjerg', name: 'lavaplayer', version:'2.2.1'
-    implementation group: 'dev.lavalink.youtube', name: 'v2', version: 'ff19b6f1751262ecba7b81fcf391b961008962d1-SNAPSHOT'
+    implementation group: 'dev.lavalink.youtube', name: 'v2', version: '1.14.0'
 
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.0'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.45.1.0'

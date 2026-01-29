@@ -41,7 +41,7 @@ public class PlayerManager {
         this.emote = new HashMap<>();
 
         YoutubeSourceOptions options = new YoutubeSourceOptions()
-                .setRemoteCipherUrl(Config.get("YT_CIPHER_URL"), Config.get("YT_CIPHER_AUTH"));
+                .setRemoteCipher(Config.get("YT_CIPHER_URL"), Config.get("YT_CIPHER_AUTH"), "");
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(options,
                 new TvHtml5EmbeddedWithThumbnail(),
                 new Tv(),

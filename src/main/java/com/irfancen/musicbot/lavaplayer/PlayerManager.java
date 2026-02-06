@@ -42,12 +42,13 @@ public class PlayerManager {
 
         YoutubeSourceOptions options = new YoutubeSourceOptions()
                 .setRemoteCipher(Config.get("YT_CIPHER_URL"), Config.get("YT_CIPHER_AUTH"), "");
+
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(options,
-                new TvHtml5EmbeddedWithThumbnail(),
-                new Tv(),
-                new WebEmbeddedWithThumbnail(),
-                new WebWithThumbnail(),
-                new Music()
+                new AndroidMusicWithThumbnail(setupClientOptions(false, false, true, false)),
+                new MusicWithThumbnail(setupClientOptions(false, false, false, true)),
+                new WebWithThumbnail(setupClientOptions(false, true, false, true)),
+                new WebEmbeddedWithThumbnail(setupClientOptions(false, false, false, false)),
+                new AndroidVrWithThumbnail(setupClientOptions(true, true, true, false))
         );
         if (!Config.get("REFRESH_TOKEN").isEmpty()) {
             youtube.useOauth2(Config.get("REFRESH_TOKEN"), true);

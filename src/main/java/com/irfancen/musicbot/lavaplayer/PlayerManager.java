@@ -43,9 +43,8 @@ public class PlayerManager {
         YoutubeSourceOptions options = new YoutubeSourceOptions()
                 .setRemoteCipher(Config.get("YT_CIPHER_URL"), Config.get("YT_CIPHER_AUTH"), "");
         YoutubeAudioSourceManager youtube = new YoutubeAudioSourceManager(options,
-//                new Tv(),
+                new TvHtml5SimplyWithThumbnail(),
                 new MWebWithThumbnail(),
-                new Android(),
                 new WebEmbeddedWithThumbnail(),
                 new WebWithThumbnail(),
                 new Music()

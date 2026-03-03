@@ -1,9 +1,11 @@
 package com.irfancen.musicbot;
 
+import club.minnced.discord.jdave.interop.JDaveSessionFactory;
 import com.irfancen.musicbot.database.SQLiteDataSource;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.audio.AudioModuleConfig;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -33,6 +35,10 @@ public class Bot {
                 .enableCache(CacheFlag.VOICE_STATE)
                 .addEventListeners(new BotListener(waiter), waiter)
                 .setActivity(Activity.playing("with her Developer."))
+                .setAudioModuleConfig(
+                        new AudioModuleConfig()
+                                .withDaveSessionFactory(new JDaveSessionFactory())
+                )
                 .build().awaitReady();
     }
 }

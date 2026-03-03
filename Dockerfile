@@ -1,4 +1,4 @@
-FROM gradle:6.7-jdk11 AS build
+FROM gradle:9.1.0-jdk25 AS build
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ RUN gradle build || return 0
 COPY . .
 RUN gradle clean build
 
-FROM gradle:6.7-jdk11 AS prod
+FROM gradle:9.1.0-jdk25 AS prod
 
 ENV BOT_TOKEN ${BOT_TOKEN}
 ENV PREFIX ${PREFIX}

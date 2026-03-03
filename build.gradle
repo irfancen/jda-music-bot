@@ -1,14 +1,20 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.gradleup.shadow' version '9.3.0'
 }
-
-mainClassName = 'com.irfancen.musicbot.Bot'
 
 group 'com.irfancen'
 version = project.version
-sourceCompatibility = 11
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+application {
+    mainClass = 'com.irfancen.musicbot.Bot'
+}
 
 repositories {
     mavenCentral()
@@ -41,13 +47,18 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'net.dv8tion', name: 'JDA', version: '5.5.1'
+    implementation group: 'net.dv8tion', name: 'JDA', version: '6.3.1'
     implementation group: 'pw.chew', name: 'jda-chewtils', version: '2.1'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.13'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.25'
     implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '2.3.2'
 
-    implementation group: 'dev.arbjerg', name: 'lavaplayer', version:'2.2.1'
-    implementation group: 'dev.lavalink.youtube', name: 'v2', version: 'ab5062530eca741d13fd8d1c414ff53cde7c4448-SNAPSHOT'
+    implementation group: 'dev.arbjerg', name: 'lavaplayer', version:'2.2.6'
+    implementation group: 'dev.lavalink.youtube', name: 'v2', version: '1.18.0'
+
+    implementation group: 'club.minnced', name: 'jdave-native-linux-x86-64', version: '0.1.7'
+    implementation group: 'club.minnced', name: 'jdave-native-linux-aarch64', version: '0.1.7'
+    implementation group: 'club.minnced', name: 'jdave-native-win-x86-64', version: '0.1.7'
+    implementation group: 'club.minnced', name: 'jdave-native-darwin', version: '0.1.7'
 
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.0'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.45.1.0'
@@ -56,6 +67,7 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
 }
 
 test {
